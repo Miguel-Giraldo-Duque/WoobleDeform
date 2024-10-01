@@ -14,6 +14,11 @@ import wobbleFragmentShader from './shaders/wobble/fragment.glsl'
  */
 // Debug
 const gui = new GUI({ width: 325 })
+
+gui.close()
+
+
+
 const debugObject = {}
 
 // Canvas
@@ -165,6 +170,30 @@ const sizes = {
     height: window.innerHeight,
     pixelRatio: Math.min(window.devicePixelRatio, 2)
 }
+/**
+ * Camera
+ */
+// Base camera
+const camera = new THREE.PerspectiveCamera(35, sizes.width / sizes.height, 0.1, 100)
+if (window.innerWidth < 500) {
+    camera.position.set(13, -25, -5);  
+    camera.updateProjectionMatrix();  
+} else {
+    camera.position.set(13, -20, -5);
+    camera.updateProjectionMatrix(); 
+}
+scene.add(camera)
+
+
+// Función para actualizar la posición de la cámara
+const updateCameraPosition = () => {
+    if (window.innerWidth < 500) {
+        camera.position.set(13, -25, -5);   
+    } else {
+        camera.position.set(13, -20, -5);
+    }
+    camera.updateProjectionMatrix();  // Asegúrate de actualizar la matriz de proyección si se cambia la posición o aspecto
+};
 
 window.addEventListener('resize', () =>
 {
@@ -173,6 +202,7 @@ window.addEventListener('resize', () =>
     sizes.height = window.innerHeight
     sizes.pixelRatio = Math.min(window.devicePixelRatio, 2)
 
+    updateCameraPosition()
     // Update camera
     camera.aspect = sizes.width / sizes.height
     camera.updateProjectionMatrix()
@@ -182,13 +212,6 @@ window.addEventListener('resize', () =>
     renderer.setPixelRatio(sizes.pixelRatio)
 })
 
-/**
- * Camera
- */
-// Base camera
-const camera = new THREE.PerspectiveCamera(35, sizes.width / sizes.height, 0.1, 100)
-camera.position.set(13, - 20    , - 5)
-scene.add(camera)
 
 // Controls
 const controls = new OrbitControls(camera, canvas)
